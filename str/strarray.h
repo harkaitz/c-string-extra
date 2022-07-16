@@ -8,7 +8,7 @@
 typedef int (*strcmp_f) (const char *s1, const char *s2);
 
 static inline
-void streq2map(char *_i[], int _o_sz, char *_o[_o_sz]) {
+void streq2map(char *_i[], int _o_sz, char const *_o[_o_sz]) {
     int f,t; char *v1,*v2;
     for (f=0, t=0; _i[f] && t<(_o_sz-3); f++) {
         v1 = _i[f];
@@ -20,31 +20,29 @@ void streq2map(char *_i[], int _o_sz, char *_o[_o_sz]) {
 }
 
 static inline
-char *strmap_get(char *_a[], const char _key[], strcmp_f _cmp) {
-    for (char **e = _a; *e; e+=2) {
-        if (*(e+1) && !_cmp(_key,*e)) {
-            return *(e+1);
+char const *strmap_get_val(char const *_a[], const char _key[], strcmp_f _cmp, char const *_def) {
+    if (_key) {
+        for (char const **k = _a; *k; k+=2) {
+            if (*(k+1) && !_cmp(_key,*k)) {
+                return *(k+1);
+            }
         }
     }
-    return NULL;
+    return _def;
 }
 
 static inline
-void strmap_free(char *_a[]) {
-    for (char **p = _a; *p; p++) {
-        free(*p);
-    }
-}
-
-static inline
-int strmap_malloc(char *_a[]) {
-    for (char **p = _a; *p; p++) {
-        if (!(*p = strdup(*p))) {
-            strmap_free(_a);
-            return -1;
+char const *strmap_get_key(char const *_a[], const char _val[], strcmp_f _cmp, char const *_def) {
+    if (_val) {
+        for (char const **k = _a; *k; k+=2) {
+            if (*(k+1) && !_cmp(_val,*(k+1))) {
+                return *k;
+            }
         }
     }
-    return 0;
+    return _def;
 }
+
+
 
 #endif
