@@ -8,8 +8,8 @@
 typedef int (*strcmp_f) (const char *s1, const char *s2);
 
 static inline
-void streq2map(char *_i[], int _o_sz, char const *_o[_o_sz]) {
-    int f,t; char *v1,*v2;
+void streq2map(char *_i[], int _o_sz, void const *_ov) {
+    int f,t; char *v1,*v2; char const **_o = (char const **)_ov;
     for (f=0, t=0; _i[f] && t<(_o_sz-3); f++) {
         v1 = _i[f];
         if ((v2 = strchr(v1, '='))) *(v2++) = '\0';
